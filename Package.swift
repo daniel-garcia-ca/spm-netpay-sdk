@@ -16,10 +16,6 @@ let package = Package(
         .library(
             name: "TMXProfiling",
             targets: ["TMXProfiling"]
-        ),
-        .library(
-            name: "TMXProfilingConnections",
-            targets: ["TMXProfilingConnections"]
         )
     ],
     dependencies: [
@@ -34,11 +30,6 @@ let package = Package(
                     name: "TMXProfiling",
                     url: "https://github.com/daniel-garcia-ca/xcframework-tmx-profile/releases/tag/1.0.1/TMXProfiling.xcframework.zip",
                     checksum: "b4f285d7005da07e2224e43bb068bcdf17dcacb2e2e7583de0c9116ebb8fecd9"
-                ),
-        .binaryTarget(
-                    name: "TMXProfilingConnections",
-                    url: "https://github.com/daniel-garcia-ca/xcframework-tmx-profile-communication/releases/tag/1.0.1/TMXProfilingConnections.xcframework.zip",
-                    checksum: "b71a3171edb8bbfcb928e5c9df19bca357b392a64b7ef213569062117e2724ec"
-                ),
+                )
     ]
 )
