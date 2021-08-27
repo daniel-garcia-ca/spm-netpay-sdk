@@ -38,7 +38,7 @@ let package = Package(
         .binaryTarget(
                     name: "TMXProfilingConnections",
                     url: "https://github.com/daniel-garcia-ca/xcframework-tmx-profile-communication/releases/tag/1.0.0/TMXProfilingConnections.xcframework.zip",
-                    checksum: "b4f285d7005da07e2224e43bb068bcdf17dcacb2e2e7583de0c9116ebb8fecd9"
+                    checksum: "b71a3171edb8bbfcb928e5c9df19bca357b392a64b7ef213569062117e2724ec"
                 ),
     ]
 )
