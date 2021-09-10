@@ -266,6 +266,7 @@ SWIFT_CLASS_NAMED("CardCVVTextField")
 @end
 
 
+
 @interface NPCardCVVTextField (SWIFT_EXTENSION(NetPaySDK)) <UITextFieldDelegate>
 - (BOOL)textField:(UITextField * _Nonnull)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString * _Nonnull)string SWIFT_WARN_UNUSED_RESULT;
 @end
@@ -451,7 +452,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) UIColor * _N
 @property (nonatomic) BOOL cardIOEnabled SWIFT_UNAVAILABLE_MSG("Built in support for Card.ios was removed. You can implement it in your app and call the setCreditCardInformation(number:name:expiration:) method");
 + (NPCreditCardFormViewController * _Nonnull)creditCardFormViewControllerWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT;
 + (NPCreditCardFormViewController * _Nonnull)makeCreditCardFormWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT SWIFT_DEPRECATED_MSG("Please use the new method that confrom to Objective-C convention +[NPCreditCardFormViewController creditCardFormViewControllerWithPublicKey:] as of this method will be removed in the future release.", "makeCreditCardFormViewController(withPublicKey:)");
-- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number name:(NSString * _Nonnull)name expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear;
+- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number name:(NSString * _Nonnull)name expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear cvv:(NSString * _Nonnull)cvv;
 - (void)loadView;
 - (void)viewDidLoad;
 - (void)viewWillLayoutSubviews;
@@ -1194,6 +1195,7 @@ SWIFT_CLASS_NAMED("CardCVVTextField")
 @end
 
 
+
 @interface NPCardCVVTextField (SWIFT_EXTENSION(NetPaySDK)) <UITextFieldDelegate>
 - (BOOL)textField:(UITextField * _Nonnull)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString * _Nonnull)string SWIFT_WARN_UNUSED_RESULT;
 @end
@@ -1379,7 +1381,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) UIColor * _N
 @property (nonatomic) BOOL cardIOEnabled SWIFT_UNAVAILABLE_MSG("Built in support for Card.ios was removed. You can implement it in your app and call the setCreditCardInformation(number:name:expiration:) method");
 + (NPCreditCardFormViewController * _Nonnull)creditCardFormViewControllerWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT;
 + (NPCreditCardFormViewController * _Nonnull)makeCreditCardFormWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT SWIFT_DEPRECATED_MSG("Please use the new method that confrom to Objective-C convention +[NPCreditCardFormViewController creditCardFormViewControllerWithPublicKey:] as of this method will be removed in the future release.", "makeCreditCardFormViewController(withPublicKey:)");
-- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number name:(NSString * _Nonnull)name expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear;
+- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number name:(NSString * _Nonnull)name expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear cvv:(NSString * _Nonnull)cvv;
 - (void)loadView;
 - (void)viewDidLoad;
 - (void)viewWillLayoutSubviews;
