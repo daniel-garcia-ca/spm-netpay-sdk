@@ -266,10 +266,10 @@ SWIFT_CLASS_NAMED("CardCVVTextField")
 @end
 
 
-
 @interface NPCardCVVTextField (SWIFT_EXTENSION(NetPaySDK)) <UITextFieldDelegate>
 - (BOOL)textField:(UITextField * _Nonnull)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString * _Nonnull)string SWIFT_WARN_UNUSED_RESULT;
 @end
+
 
 
 SWIFT_CLASS_NAMED("CardExpiryDatePicker")
@@ -279,15 +279,15 @@ SWIFT_CLASS_NAMED("CardExpiryDatePicker")
 @end
 
 
-@interface NPCardExpiryDatePicker (SWIFT_EXTENSION(NetPaySDK)) <UIPickerViewDelegate>
-- (NSString * _Nullable)pickerView:(UIPickerView * _Nonnull)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component SWIFT_WARN_UNUSED_RESULT;
-- (void)pickerView:(UIPickerView * _Nonnull)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
-@end
-
-
 @interface NPCardExpiryDatePicker (SWIFT_EXTENSION(NetPaySDK)) <UIPickerViewDataSource>
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView * _Nonnull)pickerView SWIFT_WARN_UNUSED_RESULT;
 - (NSInteger)pickerView:(UIPickerView * _Nonnull)pickerView numberOfRowsInComponent:(NSInteger)component SWIFT_WARN_UNUSED_RESULT;
+@end
+
+
+@interface NPCardExpiryDatePicker (SWIFT_EXTENSION(NetPaySDK)) <UIPickerViewDelegate>
+- (NSString * _Nullable)pickerView:(UIPickerView * _Nonnull)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component SWIFT_WARN_UNUSED_RESULT;
+- (void)pickerView:(UIPickerView * _Nonnull)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 @end
 
 @class InfoAccessibilityElement;
@@ -427,7 +427,6 @@ SWIFT_CLASS_NAMED("CreditCardFormViewController")
 @property (nonatomic, copy) IBOutletCollection(UILabel) NSArray<UILabel *> * _Null_unspecified errorLabels;
 @property (nonatomic, strong) IBOutlet UIScrollView * _Null_unspecified contentView;
 @property (nonatomic, strong) IBOutlet NPCardNumberTextField * _Null_unspecified cardNumberTextField;
-@property (nonatomic, strong) IBOutlet NPCardNameTextField * _Null_unspecified cardNameTextField;
 @property (nonatomic, strong) IBOutlet NPCardExpiryDateTextField * _Null_unspecified expiryDateTextField;
 @property (nonatomic, strong) IBOutlet NPCardCVVTextField * _Null_unspecified secureCodeTextField;
 @property (nonatomic, strong) IBOutlet NPMainActionButton * _Null_unspecified confirmButton;
@@ -452,7 +451,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) UIColor * _N
 @property (nonatomic) BOOL cardIOEnabled SWIFT_UNAVAILABLE_MSG("Built in support for Card.ios was removed. You can implement it in your app and call the setCreditCardInformation(number:name:expiration:) method");
 + (NPCreditCardFormViewController * _Nonnull)creditCardFormViewControllerWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT;
 + (NPCreditCardFormViewController * _Nonnull)makeCreditCardFormWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT SWIFT_DEPRECATED_MSG("Please use the new method that confrom to Objective-C convention +[NPCreditCardFormViewController creditCardFormViewControllerWithPublicKey:] as of this method will be removed in the future release.", "makeCreditCardFormViewController(withPublicKey:)");
-- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number name:(NSString * _Nonnull)name expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear cvv:(NSString * _Nonnull)cvv;
+- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear cvv:(NSString * _Nonnull)cvv;
 - (void)loadView;
 - (void)viewDidLoad;
 - (void)viewWillLayoutSubviews;
@@ -489,6 +488,49 @@ SWIFT_CLASS("_TtC9NetPaySDK21ExpandedHitAreaButton")
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent * _Nullable)event SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)initWithFrame:(CGRect)frame OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)coder OBJC_DESIGNATED_INITIALIZER;
+@end
+
+@protocol UIViewControllerContextTransitioning;
+@class UIPanGestureRecognizer;
+
+SWIFT_CLASS("_TtC9NetPaySDK30HalfModalInteractiveTransition")
+@interface HalfModalInteractiveTransition : UIPercentDrivenInteractiveTransition
+- (void)startInteractiveTransition:(id <UIViewControllerContextTransitioning> _Nonnull)transitionContext;
+@property (nonatomic) CGFloat completionSpeed;
+- (void)onPanWithPan:(UIPanGestureRecognizer * _Nonnull)pan;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+
+SWIFT_CLASS("_TtC9NetPaySDK31HalfModalPresentationController")
+@interface HalfModalPresentationController : UIPresentationController
+- (nonnull instancetype)initWithPresentedViewController:(UIViewController * _Nonnull)presentedViewController presentingViewController:(UIViewController * _Nullable)presentingViewController OBJC_DESIGNATED_INITIALIZER;
+- (void)onPanWithPan:(UIPanGestureRecognizer * _Nonnull)pan;
+@property (nonatomic, readonly) CGRect frameOfPresentedViewInContainerView;
+- (void)presentationTransitionWillBegin;
+- (void)dismissalTransitionWillBegin;
+- (void)dismissalTransitionDidEnd:(BOOL)completed;
+@end
+
+
+SWIFT_CLASS("_TtC9NetPaySDK27HalfModalTransitionAnimator")
+@interface HalfModalTransitionAnimator : NSObject <UIViewControllerAnimatedTransitioning>
+- (void)animateTransition:(id <UIViewControllerContextTransitioning> _Nonnull)transitionContext;
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning> _Nullable)transitionContext SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+@protocol UIViewControllerInteractiveTransitioning;
+
+SWIFT_CLASS("_TtC9NetPaySDK30HalfModalTransitioningDelegate")
+@interface HalfModalTransitioningDelegate : NSObject <UIViewControllerTransitioningDelegate>
+- (id <UIViewControllerAnimatedTransitioning> _Nullable)animationControllerForDismissedController:(UIViewController * _Nonnull)dismissed SWIFT_WARN_UNUSED_RESULT;
+- (UIPresentationController * _Nullable)presentationControllerForPresentedViewController:(UIViewController * _Nonnull)presented presentingViewController:(UIViewController * _Nullable)presenting sourceViewController:(UIViewController * _Nonnull)source SWIFT_WARN_UNUSED_RESULT;
+- (id <UIViewControllerInteractiveTransitioning> _Nullable)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning> _Nonnull)animator SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 
@@ -638,7 +680,6 @@ SWIFT_CLASS("_TtC9NetPaySDK34OverlayPanelPresentationController")
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController * _Nonnull)controller traitCollection:(UITraitCollection * _Nonnull)traitCollection SWIFT_WARN_UNUSED_RESULT;
 @end
 
-@protocol UIViewControllerContextTransitioning;
 
 @interface OverlayPanelPresentationController (SWIFT_EXTENSION(NetPaySDK)) <UIViewControllerAnimatedTransitioning>
 - (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning> _Nullable)transitionContext SWIFT_WARN_UNUSED_RESULT;
@@ -702,6 +743,19 @@ SWIFT_CLASS("_TtC9NetPaySDK17ProfileController")
 @property (nonatomic) NSTimeInterval timeout;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
+
+
+SWIFT_CLASS_NAMED("StyleForm")
+@interface NPSDKStyleForm : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
+SWIFT_CLASS("_TtC9NetPaySDK16StyleFormBuilder")
+@interface StyleFormBuilder : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
 
 
 
@@ -1195,10 +1249,10 @@ SWIFT_CLASS_NAMED("CardCVVTextField")
 @end
 
 
-
 @interface NPCardCVVTextField (SWIFT_EXTENSION(NetPaySDK)) <UITextFieldDelegate>
 - (BOOL)textField:(UITextField * _Nonnull)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString * _Nonnull)string SWIFT_WARN_UNUSED_RESULT;
 @end
+
 
 
 SWIFT_CLASS_NAMED("CardExpiryDatePicker")
@@ -1208,15 +1262,15 @@ SWIFT_CLASS_NAMED("CardExpiryDatePicker")
 @end
 
 
-@interface NPCardExpiryDatePicker (SWIFT_EXTENSION(NetPaySDK)) <UIPickerViewDelegate>
-- (NSString * _Nullable)pickerView:(UIPickerView * _Nonnull)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component SWIFT_WARN_UNUSED_RESULT;
-- (void)pickerView:(UIPickerView * _Nonnull)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
-@end
-
-
 @interface NPCardExpiryDatePicker (SWIFT_EXTENSION(NetPaySDK)) <UIPickerViewDataSource>
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView * _Nonnull)pickerView SWIFT_WARN_UNUSED_RESULT;
 - (NSInteger)pickerView:(UIPickerView * _Nonnull)pickerView numberOfRowsInComponent:(NSInteger)component SWIFT_WARN_UNUSED_RESULT;
+@end
+
+
+@interface NPCardExpiryDatePicker (SWIFT_EXTENSION(NetPaySDK)) <UIPickerViewDelegate>
+- (NSString * _Nullable)pickerView:(UIPickerView * _Nonnull)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component SWIFT_WARN_UNUSED_RESULT;
+- (void)pickerView:(UIPickerView * _Nonnull)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 @end
 
 @class InfoAccessibilityElement;
@@ -1356,7 +1410,6 @@ SWIFT_CLASS_NAMED("CreditCardFormViewController")
 @property (nonatomic, copy) IBOutletCollection(UILabel) NSArray<UILabel *> * _Null_unspecified errorLabels;
 @property (nonatomic, strong) IBOutlet UIScrollView * _Null_unspecified contentView;
 @property (nonatomic, strong) IBOutlet NPCardNumberTextField * _Null_unspecified cardNumberTextField;
-@property (nonatomic, strong) IBOutlet NPCardNameTextField * _Null_unspecified cardNameTextField;
 @property (nonatomic, strong) IBOutlet NPCardExpiryDateTextField * _Null_unspecified expiryDateTextField;
 @property (nonatomic, strong) IBOutlet NPCardCVVTextField * _Null_unspecified secureCodeTextField;
 @property (nonatomic, strong) IBOutlet NPMainActionButton * _Null_unspecified confirmButton;
@@ -1381,7 +1434,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) UIColor * _N
 @property (nonatomic) BOOL cardIOEnabled SWIFT_UNAVAILABLE_MSG("Built in support for Card.ios was removed. You can implement it in your app and call the setCreditCardInformation(number:name:expiration:) method");
 + (NPCreditCardFormViewController * _Nonnull)creditCardFormViewControllerWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT;
 + (NPCreditCardFormViewController * _Nonnull)makeCreditCardFormWithPublicKey:(NSString * _Nonnull)publicKey testMode:(BOOL)testMode SWIFT_WARN_UNUSED_RESULT SWIFT_DEPRECATED_MSG("Please use the new method that confrom to Objective-C convention +[NPCreditCardFormViewController creditCardFormViewControllerWithPublicKey:] as of this method will be removed in the future release.", "makeCreditCardFormViewController(withPublicKey:)");
-- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number name:(NSString * _Nonnull)name expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear cvv:(NSString * _Nonnull)cvv;
+- (void)setCreditCardInformationWithNumber:(NSString * _Nonnull)number expMonth:(NSInteger)expMonth expirationYear:(NSInteger)expirationYear cvv:(NSString * _Nonnull)cvv;
 - (void)loadView;
 - (void)viewDidLoad;
 - (void)viewWillLayoutSubviews;
@@ -1418,6 +1471,49 @@ SWIFT_CLASS("_TtC9NetPaySDK21ExpandedHitAreaButton")
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent * _Nullable)event SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)initWithFrame:(CGRect)frame OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)coder OBJC_DESIGNATED_INITIALIZER;
+@end
+
+@protocol UIViewControllerContextTransitioning;
+@class UIPanGestureRecognizer;
+
+SWIFT_CLASS("_TtC9NetPaySDK30HalfModalInteractiveTransition")
+@interface HalfModalInteractiveTransition : UIPercentDrivenInteractiveTransition
+- (void)startInteractiveTransition:(id <UIViewControllerContextTransitioning> _Nonnull)transitionContext;
+@property (nonatomic) CGFloat completionSpeed;
+- (void)onPanWithPan:(UIPanGestureRecognizer * _Nonnull)pan;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+
+SWIFT_CLASS("_TtC9NetPaySDK31HalfModalPresentationController")
+@interface HalfModalPresentationController : UIPresentationController
+- (nonnull instancetype)initWithPresentedViewController:(UIViewController * _Nonnull)presentedViewController presentingViewController:(UIViewController * _Nullable)presentingViewController OBJC_DESIGNATED_INITIALIZER;
+- (void)onPanWithPan:(UIPanGestureRecognizer * _Nonnull)pan;
+@property (nonatomic, readonly) CGRect frameOfPresentedViewInContainerView;
+- (void)presentationTransitionWillBegin;
+- (void)dismissalTransitionWillBegin;
+- (void)dismissalTransitionDidEnd:(BOOL)completed;
+@end
+
+
+SWIFT_CLASS("_TtC9NetPaySDK27HalfModalTransitionAnimator")
+@interface HalfModalTransitionAnimator : NSObject <UIViewControllerAnimatedTransitioning>
+- (void)animateTransition:(id <UIViewControllerContextTransitioning> _Nonnull)transitionContext;
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning> _Nullable)transitionContext SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+@protocol UIViewControllerInteractiveTransitioning;
+
+SWIFT_CLASS("_TtC9NetPaySDK30HalfModalTransitioningDelegate")
+@interface HalfModalTransitioningDelegate : NSObject <UIViewControllerTransitioningDelegate>
+- (id <UIViewControllerAnimatedTransitioning> _Nullable)animationControllerForDismissedController:(UIViewController * _Nonnull)dismissed SWIFT_WARN_UNUSED_RESULT;
+- (UIPresentationController * _Nullable)presentationControllerForPresentedViewController:(UIViewController * _Nonnull)presented presentingViewController:(UIViewController * _Nullable)presenting sourceViewController:(UIViewController * _Nonnull)source SWIFT_WARN_UNUSED_RESULT;
+- (id <UIViewControllerInteractiveTransitioning> _Nullable)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning> _Nonnull)animator SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 
@@ -1567,7 +1663,6 @@ SWIFT_CLASS("_TtC9NetPaySDK34OverlayPanelPresentationController")
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController * _Nonnull)controller traitCollection:(UITraitCollection * _Nonnull)traitCollection SWIFT_WARN_UNUSED_RESULT;
 @end
 
-@protocol UIViewControllerContextTransitioning;
 
 @interface OverlayPanelPresentationController (SWIFT_EXTENSION(NetPaySDK)) <UIViewControllerAnimatedTransitioning>
 - (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning> _Nullable)transitionContext SWIFT_WARN_UNUSED_RESULT;
@@ -1631,6 +1726,19 @@ SWIFT_CLASS("_TtC9NetPaySDK17ProfileController")
 @property (nonatomic) NSTimeInterval timeout;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
+
+
+SWIFT_CLASS_NAMED("StyleForm")
+@interface NPSDKStyleForm : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+
+SWIFT_CLASS("_TtC9NetPaySDK16StyleFormBuilder")
+@interface StyleFormBuilder : NSObject
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
 
 
 

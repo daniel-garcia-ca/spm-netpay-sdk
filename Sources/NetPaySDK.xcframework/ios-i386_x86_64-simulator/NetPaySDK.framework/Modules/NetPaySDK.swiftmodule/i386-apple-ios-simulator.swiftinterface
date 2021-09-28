@@ -64,6 +64,14 @@ public class NetPayTokenRequest : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
+@objc public class HalfModalTransitioningDelegate : ObjectiveC.NSObject, UIKit.UIViewControllerTransitioningDelegate {
+  public init(viewController: UIKit.UIViewController, presentingViewController: UIKit.UIViewController)
+  @objc public func animationController(forDismissed dismissed: UIKit.UIViewController) -> UIKit.UIViewControllerAnimatedTransitioning?
+  @objc public func presentationController(forPresented presented: UIKit.UIViewController, presenting: UIKit.UIViewController?, source: UIKit.UIViewController) -> UIKit.UIPresentationController?
+  @objc public func interactionControllerForDismissal(using animator: UIKit.UIViewControllerAnimatedTransitioning) -> UIKit.UIViewControllerInteractiveTransitioning?
+  @objc override dynamic public init()
+  @objc deinit
+}
 @objc @available(*, deprecated, renamed: "Client", message: "Utiliza `Client`. ")
 public class NetPaySDKClient : ObjectiveC.NSObject {
   @objc public var publicKey: Swift.String {
@@ -81,6 +89,24 @@ public class NetPaySDKClient : ObjectiveC.NSObject {
   public func send(_ request: NetPaySDK.NetPayTokenRequest, delegate: NetPaySDK.NetPayTokenRequestDelegate?)
   @objc override dynamic public init()
   @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class HalfModalPresentationController : UIKit.UIPresentationController {
+  @objc override dynamic public init(presentedViewController: UIKit.UIViewController, presenting presentingViewController: UIKit.UIViewController?)
+  @objc override dynamic public var frameOfPresentedViewInContainerView: CoreGraphics.CGRect {
+    @objc get
+  }
+  @objc override dynamic public func presentationTransitionWillBegin()
+  @objc override dynamic public func dismissalTransitionWillBegin()
+  @objc override dynamic public func dismissalTransitionDidEnd(_ completed: Swift.Bool)
+  @objc deinit
+}
+public protocol HalfModalPresentable {
+}
+extension HalfModalPresentable where Self : UIKit.UIViewController {
+  public func maximizeToFullScreen()
+}
+extension HalfModalPresentable where Self : UIKit.UINavigationController {
+  public func isHalfModalMaximized() -> Swift.Bool
 }
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @available(*, deprecated, renamed: "NetPayTextField", message: "Use the new `NPNetPayTextField` data type instead. This class will be removed in the future released")
 @objc(NetPayTextField) public class __NetPayTextField : NetPaySDK.NetPayTextField {
@@ -390,9 +416,10 @@ public protocol CreditCardFormDelegate : NetPaySDK.CreditCardFormViewControllerD
 }
 @available(*, deprecated, renamed: "CreditCardFormViewController")
 public typealias CreditCardFormController = NetPaySDK.CreditCardFormViewController
-@_inheritsConvenienceInitializers @objc(NPCreditCardFormViewController) public class CreditCardFormViewController : UIKit.UIViewController, NetPaySDK.PaymentChooserUI {
+@_inheritsConvenienceInitializers @objc(NPCreditCardFormViewController) public class CreditCardFormViewController : UIKit.UIViewController, NetPaySDK.PaymentChooserUI, NetPaySDK.HalfModalPresentable {
   @objc public var publicKey: Swift.String?
   @objc public var testMode: Swift.Bool
+  public var styleForm: NetPaySDK.StyleForm?
   weak public var delegate: NetPaySDK.CreditCardFormViewControllerDelegate?
   @objc(delegate) weak public var __delegate: NetPaySDK.NPCreditCardFormViewControllerDelegate?
   @objc public var handleErrors: Swift.Bool
@@ -414,8 +441,8 @@ public typealias CreditCardFormController = NetPaySDK.CreditCardFormViewControll
   @objc(creditCardFormViewControllerWithPublicKey:testMode:) public static func makeCreditCardFormViewController(withPublicKey publicKey: Swift.String, testMode: Swift.Bool) -> NetPaySDK.CreditCardFormViewController
   @available(*, deprecated, renamed: "makeCreditCardFormViewController(withPublicKey:)", message: "Please use the new method that confrom to Objective-C convention +[NPCreditCardFormViewController creditCardFormViewControllerWithPublicKey:] as of this method will be removed in the future release.")
   @objc(makeCreditCardFormWithPublicKey:testMode:) public static func __makeCreditCardForm(withPublicKey publicKey: Swift.String, testMode: Swift.Bool) -> NetPaySDK.CreditCardFormViewController
-  public func setCreditCardInformationWith(number: Swift.String?, name: Swift.String?, expiration: (month: Swift.Int, year: Swift.Int)?, cvv: Swift.String?)
-  @objc(setCreditCardInformationWithNumber:name:expMonth:expirationYear:cvv:) public func __setCreditCardInformation(number: Swift.String, name: Swift.String, expMonth: Swift.Int, expirationYear: Swift.Int, cvv: Swift.String)
+  public func setCreditCardInformationWith(number: Swift.String?, expiration: (month: Swift.Int, year: Swift.Int)?, cvv: Swift.String?)
+  @objc(setCreditCardInformationWithNumber:expMonth:expirationYear:cvv:) public func __setCreditCardInformation(number: Swift.String, expMonth: Swift.Int, expirationYear: Swift.Int, cvv: Swift.String)
   @objc override dynamic public func loadView()
   @objc override dynamic public func viewDidLoad()
   @objc override dynamic public func viewWillLayoutSubviews()
@@ -708,6 +735,10 @@ extension CardExpiryDatePicker : UIKit.UIPickerViewDelegate {
 extension CardCVVTextField : UIKit.UITextFieldDelegate {
   @objc dynamic public func textField(_ textField: UIKit.UITextField, shouldChangeCharactersIn range: Foundation.NSRange, replacementString string: Swift.String) -> Swift.Bool
 }
+@_inheritsConvenienceInitializers @objc(NPSDKStyleForm) public class StyleForm : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
 public struct CreateTokenParameter : Swift.Encodable {
   public let cardHolderName: Swift.String
   public let deviceFingerPrint: Swift.String
@@ -761,6 +792,12 @@ extension NSCalendar {
 extension Request where T == NetPaySDK.Token {
   public init(cardHolderName: Swift.String, pan: NetPaySDK.PAN, expMonth: Swift.String, expYear: Swift.String, cvv2: Swift.String, deviceFingerPrint: Swift.String)
   public init(cardHolderName: Swift.String, cardNumber: Swift.String, expMonth: Swift.String, expYear: Swift.String, cvv2: Swift.String, deviceFingerPrint: Swift.String)
+}
+@objc @_inheritsConvenienceInitializers public class StyleFormBuilder : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  public func addTextButton(text: Swift.String) -> NetPaySDK.StyleFormBuilder
+  public func build() -> NetPaySDK.StyleForm
+  @objc deinit
 }
 extension Optional where Wrapped == Swift.String {
   public var isNilOrEmpty: Swift.Bool {
@@ -995,6 +1032,22 @@ extension PaymentInformation {
   public var sourceType: Swift.String {
     get
   }
+}
+@objc public class HalfModalInteractiveTransition : UIKit.UIPercentDrivenInteractiveTransition {
+  public init(viewController: UIKit.UIViewController, withView view: UIKit.UIView, presentingViewController: UIKit.UIViewController?)
+  @objc override dynamic public func startInteractiveTransition(_ transitionContext: UIKit.UIViewControllerContextTransitioning)
+  @objc override dynamic public var completionSpeed: CoreGraphics.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers public class HalfModalTransitionAnimator : ObjectiveC.NSObject, UIKit.UIViewControllerAnimatedTransitioning {
+  @objc public func animateTransition(using transitionContext: UIKit.UIViewControllerContextTransitioning)
+  @objc public func transitionDuration(using transitionContext: UIKit.UIViewControllerContextTransitioning?) -> Foundation.TimeInterval
+  @objc override dynamic public init()
+  @objc deinit
 }
 @_inheritsConvenienceInitializers @objc(NPCardNumber) final public class CardNumber : ObjectiveC.NSObject {
   @objc public static func normalize(_ pan: Swift.String) -> Swift.String
