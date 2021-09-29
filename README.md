@@ -182,7 +182,7 @@ Se crea una variable con  la instancia del objeto StyleFormBuilder y se agrega e
 
 ```swift
 let styleForm = StyleFormBuilder()
-                    .addTextButton(text: "Texto Botton Pagar")
+                    .addTextButton(text: "Texto boton pagar")
                     .build()
                 
 creditCardFormController.styleForm = styleForm
