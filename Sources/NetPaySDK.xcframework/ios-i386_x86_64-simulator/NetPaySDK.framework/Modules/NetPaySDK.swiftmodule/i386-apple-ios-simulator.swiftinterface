@@ -666,6 +666,12 @@ extension CardExpiryDatePicker : UIKit.UIPickerViewDelegate {
   @objc dynamic public func pickerView(_ pickerView: UIKit.UIPickerView, titleForRow row: Swift.Int, forComponent component: Swift.Int) -> Swift.String?
   @objc dynamic public func pickerView(_ pickerView: UIKit.UIPickerView, didSelectRow row: Swift.Int, inComponent component: Swift.Int)
 }
+@objc @_inheritsConvenienceInitializers public class StyleFormBuilder : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  public func addTextButton(text: Swift.String) -> NetPaySDK.StyleFormBuilder
+  public func build() -> NetPaySDK.StyleForm
+  @objc deinit
+}
 @_hasMissingDesignatedInitializers @objc(NPSource) public class __NetPaySource : ObjectiveC.NSObject {
   @objc public var object: Swift.String {
     @objc get
@@ -735,10 +741,6 @@ extension CardExpiryDatePicker : UIKit.UIPickerViewDelegate {
 extension CardCVVTextField : UIKit.UITextFieldDelegate {
   @objc dynamic public func textField(_ textField: UIKit.UITextField, shouldChangeCharactersIn range: Foundation.NSRange, replacementString string: Swift.String) -> Swift.Bool
 }
-@_inheritsConvenienceInitializers @objc(NPSDKStyleForm) public class StyleForm : ObjectiveC.NSObject {
-  @objc override dynamic public init()
-  @objc deinit
-}
 public struct CreateTokenParameter : Swift.Encodable {
   public let cardHolderName: Swift.String
   public let deviceFingerPrint: Swift.String
@@ -792,12 +794,6 @@ extension NSCalendar {
 extension Request where T == NetPaySDK.Token {
   public init(cardHolderName: Swift.String, pan: NetPaySDK.PAN, expMonth: Swift.String, expYear: Swift.String, cvv2: Swift.String, deviceFingerPrint: Swift.String)
   public init(cardHolderName: Swift.String, cardNumber: Swift.String, expMonth: Swift.String, expYear: Swift.String, cvv2: Swift.String, deviceFingerPrint: Swift.String)
-}
-@objc @_inheritsConvenienceInitializers public class StyleFormBuilder : ObjectiveC.NSObject {
-  @objc override dynamic public init()
-  public func addTextButton(text: Swift.String) -> NetPaySDK.StyleFormBuilder
-  public func build() -> NetPaySDK.StyleForm
-  @objc deinit
 }
 extension Optional where Wrapped == Swift.String {
   public var isNilOrEmpty: Swift.Bool {
@@ -1040,6 +1036,10 @@ extension PaymentInformation {
     @objc get
     @objc set
   }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc(NPSDKStyleForm) public class StyleForm : ObjectiveC.NSObject {
   @objc override dynamic public init()
   @objc deinit
 }
